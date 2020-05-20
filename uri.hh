@@ -235,6 +235,11 @@ public:
     return m_scheme;
   };
 
+  void set_scheme(const std::string &scheme)
+  {
+    m_scheme = scheme;
+  };
+
   scheme_category get_scheme_category() const
   {
     return m_category;
