@@ -83,20 +83,26 @@ public:
     {
       if (components.at(component::Scheme).length() == 0)
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("Scheme cannot be empty.");
+#endif
       }
       m_scheme = components.at(component::Scheme);
     }
     else
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::invalid_argument("A URI must have a scheme.");
+#endif
     }
 
     if (category == scheme_category::Hierarchical)
     {
       if (components.count(component::Content))
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("The content component is only for use in non-hierarchical URIs.");
+#endif
       }
 
       bool has_username = components.count(component::Username);
@@ -108,7 +114,9 @@ public:
       }
       else if ((has_username && !has_password) || (!has_username && has_password))
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("If a username or password is supplied, both must be provided.");
+#endif
       }
 
       if (components.count(component::Host))
@@ -127,7 +135,9 @@ public:
       }
       else
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("A path is required on a hierarchical URI, even an empty path.");
+#endif
       }
     }
     else
@@ -138,7 +148,9 @@ public:
 	  || components.count(component::Port)
 	  || components.count(component::Path))
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("None of the hierarchical components are allowed in a non-hierarchical URI.");
+#endif
       }
 
       if (components.count(component::Content))
@@ -147,7 +159,9 @@ public:
       }
       else
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("Content is a required component for a non-hierarchical URI, even an empty string.");
+#endif
       }
     }
 
@@ -249,7 +263,9 @@ public:
   {
     if (m_category != scheme_category::NonHierarchical)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::domain_error("The content component is only valid for non-hierarchical URIs.");
+#endif
     }
     return m_content;
   };
@@ -258,7 +274,9 @@ public:
   {
     if (m_category != scheme_category::Hierarchical)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::domain_error("The username component is only valid for hierarchical URIs.");
+#endif
     }
     return m_username;
   };
@@ -267,7 +285,9 @@ public:
   {
     if (m_category != scheme_category::Hierarchical)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::domain_error("The password component is only valid for hierarchical URIs.");
+#endif
     }
     return m_password;
   };
@@ -276,7 +296,9 @@ public:
   {
     if (m_category != scheme_category::Hierarchical)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::domain_error("The host component is only valid for hierarchical URIs.");
+#endif
     }
     return m_host;
   };
@@ -285,7 +307,9 @@ public:
   {
     if (m_category != scheme_category::Hierarchical)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::domain_error("The port component is only valid for hierarchical URIs.");
+#endif
     }
     return m_port;
   };
@@ -294,7 +318,9 @@ public:
   {
     if (m_category != scheme_category::Hierarchical)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::domain_error("The path component is only valid for hierarchical URIs.");
+#endif
     }
     return m_path;
   };
@@ -369,7 +395,9 @@ private:
 
     if (uri_length == 0)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::invalid_argument("URIs cannot be of zero length.");
+#endif
     }
 
     std::string::const_iterator cursor = parse_scheme(uri_text, 
@@ -401,22 +429,28 @@ private:
       if (!(std::isalnum(*scheme_end) || (*scheme_end == '-')
 	    || (*scheme_end == '+') || (*scheme_end == '.')))
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("Invalid character found in the scheme component. Supplied URI was: \""
 				    + uri_text + "\".");
+#endif
       }
       ++scheme_end;
     }
 
     if (scheme_end == uri_text.end())
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::invalid_argument("End of URI found while parsing the scheme. Supplied URI was: \""
 				  + uri_text + "\".");
+#endif
     }
 
     if (scheme_start == scheme_end)
     {
+#ifndef DISABLE_EXCEPTIONS
       throw std::invalid_argument("Scheme component cannot be zero-length. Supplied URI was: \""
 				  + uri_text + "\".");
+#endif
     }
 
     m_scheme = std::move(std::string(scheme_start, scheme_end));
@@ -497,8 +531,10 @@ private:
     {
       if (*username_end == '@')
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("Username must be followed by a password. Supplied URI was: \""
 				    + uri_text + "\".");
+#endif
       }
       ++username_end;
     }
@@ -542,10 +578,12 @@ private:
 
 	if (host_end == content.end())
 	{
+#ifndef DISABLE_EXCEPTIONS
 	  throw std::invalid_argument("End of content component encountered "
 				      "while parsing the host component. "
 				      "Supplied URI was: \""
 				      + uri_text + "\".");
+#endif
 	}
 
 	++host_end;
@@ -576,8 +614,10 @@ private:
     {
       if (!std::isdigit(*port_end))
       {
+#ifndef DISABLE_EXCEPTIONS
 	throw std::invalid_argument("Invalid character while parsing the port. "
 				    "Supplied URI was: \"" + uri_text + "\".");
+#endif
       }
 
       ++port_end;
@@ -631,7 +671,9 @@ private:
 
 	if (m_query_dict.count(key) != 0)
 	{
+#ifndef DISABLE_EXCEPTIONS
 	  throw std::invalid_argument("Bad key in the query string!");
+#endif
 	}
 
 	m_query_dict.emplace(key, value);
